@@ -1,0 +1,47 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -e '.[dev]'
+      - run: pytest
+      - run: python -c "from openbankingmcp.server import build_tools_list; assert not ({x['name'] for x in build_tools_list()} & {'payments','payouts','create_data_auth_link','exchange_code'})"
+      - name: Validate macOS/Linux installer
+        if: runner.os != 'Windows'
+        run: sh -n scripts/install.sh
+      - name: Validate Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path scripts/install.ps1),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count) {
+            $errors | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+      - uses: actions/setup-node@v5
+        if: runner.os == 'Linux'
+        with: {node-version: '20', cache: 'yarn', cache-dependency-path: web/yarn.lock}
+      - run: git ls-files --error-unmatch web/dist/index.html
+        if: runner.os == 'Linux'
+      - run: yarn install --frozen-lockfile
+        if: runner.os == 'Linux'
+        working-directory: web
+      - run: yarn build
+        if: runner.os == 'Linux'
+        working-directory: web
+      - run: git diff --exit-code -- web/dist
+        if: runner.os == 'Linux'

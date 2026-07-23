@@ -1,0 +1,8 @@
+requests>=2.32.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+httpx>=0.25.0
+cryptography>=42.0.0
+filelock>=3.13.0,<4
+keyring>=25.0.0; sys_platform == "win32" or sys_platform == "linux"
+SecretStorage>=3.3.3; sys_platform == "linux"

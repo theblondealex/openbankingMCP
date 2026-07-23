@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openbankingmcp"
+version = "0.3.0"
+description = "Local-only, read-only TrueLayer Data MCP service for macOS, Windows, and Linux"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "OpenBanking MCP Team", email = "team@openbankingmcp.com"},
+]
+keywords = ["openbanking", "mcp", "truelayer", "banking", "api"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Financial",
+]
+
+dependencies = [
+    "requests>=2.32.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.25.0",
+    "cryptography>=42.0.0",
+    "filelock>=3.13.0,<4",
+    "keyring>=25.0.0; sys_platform == 'win32' or sys_platform == 'linux'",
+    "SecretStorage>=3.3.3; sys_platform == 'linux'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/theblondealex/openbankingMCP"
+Repository = "https://github.com/theblondealex/openbankingMCP"
+Issues = "https://github.com/theblondealex/openbankingMCP/issues"
+
+[project.scripts]
+openbanking-mcp = "openbankingmcp.server:run_mcp_server"
+openbanking-dashboard = "openbankingmcp.server:start"
+openbanking-mcp-configure = "openbankingmcp.configure:main"
+openbanking-mcp-doctor = "openbankingmcp.doctor:main"
+openbanking-mcp-install-clients = "openbankingmcp.install_clients:main"
+openbanking-mcp-launchd = "openbankingmcp.launchd:main"
+openbanking-mcp-service = "openbankingmcp.service:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["openbankingmcp*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
