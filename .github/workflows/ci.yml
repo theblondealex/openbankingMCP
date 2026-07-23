@@ -1,0 +1,20 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -e '.[dev]'
+      - run: pytest
+      - run: python -c "from openbankingmcp.server import build_tools_list; assert not ({x['name'] for x in build_tools_list()} & {'payments','payouts','create_data_auth_link','exchange_code'})"
+      - uses: actions/setup-node@v4
+        with: {node-version: '20', cache: 'yarn', cache-dependency-path: web/yarn.lock}
+      - run: git ls-files --error-unmatch web/dist/index.html
+      - run: yarn install --frozen-lockfile
+        working-directory: web
+      - run: yarn build
+        working-directory: web
+      - run: git diff --exit-code -- web/dist
