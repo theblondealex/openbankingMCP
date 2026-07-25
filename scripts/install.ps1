@@ -10,7 +10,7 @@ if (-not $IsWindows -and $env:OS -ne "Windows_NT") {
 }
 
 $Repository = if ($env:OPENBANKINGMCP_REPOSITORY) { $env:OPENBANKINGMCP_REPOSITORY } else { "https://github.com/theblondealex/openbankingMCP.git" }
-$ReleaseVersion = if ($env:OPENBANKINGMCP_VERSION) { $env:OPENBANKINGMCP_VERSION } else { "v0.3.0" }
+$ReleaseVersion = if ($env:OPENBANKINGMCP_VERSION) { $env:OPENBANKINGMCP_VERSION } else { "v0.3.1" }
 $DefaultRoot = Join-Path $env:LOCALAPPDATA "OpenBankingMCP"
 $InstallRoot = if ($env:OPENBANKINGMCP_INSTALL_DIR) { $env:OPENBANKINGMCP_INSTALL_DIR } else { $DefaultRoot }
 $AppDir = Join-Path $InstallRoot "app"

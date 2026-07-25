@@ -3,7 +3,7 @@
 set -eu
 
 REPOSITORY="${OPENBANKINGMCP_REPOSITORY:-https://github.com/theblondealex/openbankingMCP.git}"
-RELEASE_VERSION="${OPENBANKINGMCP_VERSION:-v0.3.0}"
+RELEASE_VERSION="${OPENBANKINGMCP_VERSION:-v0.3.1}"
 SYSTEM_NAME="$(uname -s)"
 
 fail() {

@@ -53,7 +53,7 @@ PowerShell installer because Windows does not include a Unix shell.
 **macOS or Linux**
 
 ```sh
-export OPENBANKINGMCP_VERSION=v0.3.0
+export OPENBANKINGMCP_VERSION=v0.3.1
 curl -fsSL "https://raw.githubusercontent.com/theblondealex/openbankingMCP/${OPENBANKINGMCP_VERSION}/scripts/install.sh" -o /tmp/openbankingmcp-install.sh
 sh /tmp/openbankingmcp-install.sh
 ```
@@ -61,7 +61,7 @@ sh /tmp/openbankingmcp-install.sh
 **Windows PowerShell**
 
 ```powershell
-$env:OPENBANKINGMCP_VERSION = "v0.3.0"
+$env:OPENBANKINGMCP_VERSION = "v0.3.1"
 Invoke-WebRequest "https://raw.githubusercontent.com/theblondealex/openbankingMCP/$env:OPENBANKINGMCP_VERSION/scripts/install.ps1" -OutFile "$env:TEMP\openbankingmcp-install.ps1"
 Unblock-File "$env:TEMP\openbankingmcp-install.ps1"
 & "$env:TEMP\openbankingmcp-install.ps1"
@@ -123,27 +123,21 @@ the encrypted database or exposing the dashboard to a network.
    service is running.
 2. Make sure port `3847` is free on the computer with your browser. Temporarily
    stop a local OpenBankingMCP service if necessary.
-3. From the computer with your browser, create a localhost SSH tunnel:
-
-   ```sh
-   ssh -N -L 3847:127.0.0.1:3847 YOUR_USER@YOUR_REMOTE_MACHINE
-   ```
-
-   If both machines use Tailscale, use the remote machine's Tailscale hostname
-   or IP as `YOUR_REMOTE_MACHINE`. The SSH tunnel still keeps the dashboard
-   bound to loopback on both ends.
+3. Privately forward port `3847` from the remote machine to port `3847` on the
+   computer with your browser. You can do this through Tailscale, SSH, or
+   another trusted private remote-access tool. When it is working, opening
+   `http://127.0.0.1:3847` on your local computer will show the dashboard
+   running on the remote machine.
 4. Open [http://127.0.0.1:3847](http://127.0.0.1:3847) locally and complete the
    TrueLayer and bank screens. The OAuth callback returns through the same
-   tunnel to OpenBankingMCP on the remote machine.
-5. Close the SSH tunnel when setup is complete. The remote service keeps
+   private connection to OpenBankingMCP on the remote machine.
+5. Stop the port forwarding when setup is complete. The remote service keeps
    syncing, and agents running on that machine can use its local stdio MCP.
 
-Repeat the tunnel when a bank asks for reauthorisation. Do not expose port
-`3847` with Tailscale Funnel, a public reverse proxy, router port forwarding, or
-a public tunnel. OpenBankingMCP's Host allowlist and loopback binding are
-deliberate security controls. See
-[Tailscale's SSH documentation](https://tailscale.com/docs/reference/ssh-over-tailscale)
-for private SSH access over a tailnet.
+Repeat the private port forwarding when a bank asks for reauthorisation. Do not
+expose port `3847` with Tailscale Funnel, a public reverse proxy, router port
+forwarding, or a public tunnel. OpenBankingMCP's Host allowlist and loopback
+binding are deliberate security controls.
 
 ## Supported systems and prerequisites
 

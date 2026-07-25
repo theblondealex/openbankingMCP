@@ -20,4 +20,4 @@ def test_windows_installer_has_the_same_guided_flow():
     assert "openbanking-mcp-configure.exe" in script
     assert "openbanking-mcp-service.exe" in script
     assert "openbanking-mcp-doctor.exe" in script
-    assert "v0.3.0" in script
+    assert "v0.3.1" in script
